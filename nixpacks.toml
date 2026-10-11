@@ -1,0 +1,24 @@
+# Railway / Nixpacks build configuration.
+#
+# THIS IS THE PRODUCTION BUILD. Production deploys from Railway; the Vercel
+# deployment is the TESTING environment and ignores this file entirely, reading
+# engines.node from package.json instead. Pinned to the SAME major as
+# engines.node so the two cannot silently disagree about which Node the code is
+# tested on.
+
+[phases.setup]
+nixPkgs = ["nodejs_24"]
+
+# package-lock.json IS committed, so builds install exactly the reviewed tree.
+# `npm ci` fails loudly when the lockfile and package.json disagree, and verifies
+# each package against the integrity hash in the lockfile. `npm install` did
+# neither: it re-resolved the dependency graph on every deploy, so a transitive
+# package could silently differ from the one that was reviewed and tested.
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start"

@@ -1,0 +1,3956 @@
+:root {
+  /* ── TYPE SCALE ────────────────────────────────────────────────────────
+     Six steps, and nothing between them.
+
+     The stylesheet had grown 23 distinct font sizes, nine of them inside
+     PayLater alone: 10.5, 11, 11.5, 12.5, 13, 13.5, 14.5, 15, 15.5. The half
+     pixels are the giveaway — sizes were nudged one rule at a time until each
+     looked right on its own, which is how a screen ends up with three
+     near-identical greys of text that no one chose together.
+
+     Each step is named for the JOB it does, not its size, because the point is
+     that everything doing the same job matches. A chip is chip-sized wherever
+     it appears.
+
+     Whole pixels only. Fractional sizes are rounded by the browser at most
+     zoom levels anyway, so 12.5px and 13px are frequently the same rendered
+     glyphs — the difference lived in the source, not on the screen.
+
+     The floor is 11px, and it is for CHIPS AND BADGES — short codes like A100.
+     Arabic needs more height than Latin at the same nominal size to stay
+     legible, so running text does not go below --fs-meta.
+
+     Defined portal-agnostically (not `--pl-`) so the main portal can adopt the
+     same steps. */
+  --fs-chip: 11px;   /* status pills, badges, table tags — short, often Latin */
+  --fs-meta: 12px;   /* hints, counts, secondary lines under a title */
+  --fs-ui: 13px;     /* dense controls: links, small buttons, table actions */
+  --fs-body: 14px;   /* running text, toasts, segmented controls */
+  --fs-field: 15px;  /* form inputs — matches .field input in the main portal */
+  --fs-head: 16px;   /* section headings, card titles */
+
+  /* Display steps, for the few things that are meant to be looked at rather
+     than read: a page title, a KPI number. Set at the sizes already in use, so
+     adopting the tokens changed nothing on screen — the point of naming them is
+     that the NEXT heading picks a step instead of inventing 27px. */
+  --fs-title: 18px;    /* sub-heads above a card, a drawer's title */
+  --fs-display: 24px;  /* a secondary page heading */
+  --fs-stat: 26px;     /* the big number on a dashboard card */
+  --fs-hero: 38px;     /* the page title */
+
+  --navy: #1c2b3a;
+  --navy-dark: #14212d;
+  --gold: #b8924a;
+  --gold-dark: #9c7a38;
+  --bg: #f4f5f7;
+  --card: #ffffff;
+  --text: #1f2933;
+  --muted: #6b7684;
+  --border: #e2e6ea;
+  --danger: #b23b3b;
+  --danger-bg: #fbecec;
+  --success: #2f7a4d;
+  --radius: 10px;
+  --shadow: 0 10px 30px rgba(20, 33, 45, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--gold-dark);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  background: #ffffff;
+  color: var(--navy-dark);
+  /* Gold accent line along the bottom edge as the divider. */
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 1px 4px rgba(20, 33, 45, 0.06);
+}
+.topbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--navy-dark);
+}
+.brand img {
+  /* White header bar: the black line-art sits directly on it, no chip. */
+  height: 64px;
+  width: auto;
+  display: block;
+}
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.brand-text .name {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.brand-text .sub {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ---------- Login ---------- */
+.auth-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px 32px 28px;
+}
+.auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.auth-logo img {
+  /* Wide (landscape) firm mark, black line-art on the white card. Size by
+     width so it scales proportionally and isn't oversized; height:auto keeps
+     the aspect ratio (never distorted). */
+  width: auto;
+  max-width: 240px;
+  height: auto;
+}
+.auth-logo .fallback {
+  height: 64px;
+  width: 64px;
+  border-radius: 12px;
+  background: var(--navy-dark);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: 1px;
+  border: 2px solid var(--gold);
+}
+.auth-logo h1 {
+  margin: 0;
+  font-size: var(--fs-title);
+  color: var(--navy-dark);
+  text-align: center;
+}
+.auth-logo p {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  text-align: center;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--navy-dark);
+}
+.field input,
+.field select {
+  width: 100%;
+  padding: 11px 12px;
+  font-size: 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 146, 74, 0.18);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  background: var(--navy-dark);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn:hover {
+  background: var(--navy);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--navy-dark);
+}
+.btn-gold:hover {
+  background: var(--gold-dark);
+  color: #fff;
+}
+.btn-ghost {
+  width: auto;
+  background: transparent;
+  color: var(--navy-dark);
+  border: 1px solid var(--navy-dark);
+  padding: 8px 14px;
+  font-size: 14px;
+}
+.btn-ghost:hover {
+  background: var(--navy-dark);
+  color: #fff;
+}
+
+.auth-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+}
+.form-error {
+  background: var(--danger-bg);
+  border: 1px solid #f0c9c9;
+  color: var(--danger);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.form-success {
+  background: #e9f4ee;
+  border: 1px solid #bfe0cd;
+  color: var(--success);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.page-footer {
+  text-align: center;
+  padding: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- Dashboard panels ---------- */
+.panel-wrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.panel-main {
+  flex: 1;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+.panel-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+.panel-card h2 {
+  margin: 0 0 4px;
+  color: var(--navy-dark);
+}
+.panel-card .lead {
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(184, 146, 74, 0.15);
+  color: var(--gold-dark);
+  border: 1px solid rgba(184, 146, 74, 0.4);
+}
+.meta-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px 16px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+.meta-grid dt {
+  color: var(--muted);
+  font-weight: 600;
+}
+.meta-grid dd {
+  margin: 0;
+  color: var(--text);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.user-menu .who {
+  text-align: right;
+  line-height: 1.2;
+}
+.user-menu .who .u {
+  font-weight: 600;
+  font-size: 14px;
+}
+.user-menu .who .r {
+  font-size: 12px;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ---------- Tables / admin ---------- */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+table.data th,
+table.data td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+table.data th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.role-pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.role-admin {
+  background: #eef3fb;
+  color: #2b4a7a;
+}
+.role-manager {
+  background: #f3eefb;
+  color: #5a3d86;
+}
+.role-user {
+  background: #eef7f1;
+  color: #2f7a4d;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+.form-row .field {
+  flex: 1;
+}
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* =======================================================================
+   Coffee & Cardamom — dashboard design system
+   Tokens are scoped to .dash so the login/forgot pages keep their own theme.
+   RTL-ready via logical properties; the language toggle flips <html dir>.
+   ======================================================================= */
+.dash {
+  --bg-app: #fbfaf7;
+  --bg-sidebar: #f6f5f1;
+  --bg-cell: #f3f2ed;
+  --surface-card: #ffffff;
+  /* Task status grounds — see .task-row.is-done / .is-open. */
+  --task-done-bg: #eef7f0;
+  --task-done-border: #cfe6d6;
+  --task-open-bg: #fdf3f2;
+  --task-open-border: #f3dad7;
+  --border: #e9e7e0;
+  --text-primary: #232220;
+  --text-muted: #93908a;
+  --text-faint: #b8b4ad;
+  --albaker-gold: #bd9446;
+  --finjan-green: #5e8c70;
+  --both-purple: #6c5ce7;
+  --ok-green: #4f8a63;
+  --warn-amber: #c9892f;
+  --live-green: #3fae6b;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-app);
+  min-height: 100vh;
+}
+
+/* ---- Sidebar ---- */
+.dash-sidebar {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 240px;
+  /* Full viewport height so the column can distribute space; dvh keeps it
+     correct under mobile browser chrome (100vh fallback for older engines). */
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-sidebar);
+  border-inline-end: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  /* The nav area scrolls internally; the sidebar itself never scrolls. */
+  overflow: hidden;
+  padding: 20px 16px;
+  z-index: 30;
+}
+.dash-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0 16px;
+}
+.dash-brand img {
+  /* Wide landscape mark: size by width to fit the 240px sidebar; height:auto
+     preserves the aspect ratio (never distorted). */
+  width: auto;
+  max-width: 144px;
+  height: auto;
+}
+.dash-brand-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+.dash-nav-wrap {
+  margin-top: 4px;
+  /* Grow to fill the space between brand/switcher and the footer, then scroll
+     its own overflow so EVERY nav link is reachable at any viewport height.
+     min-height:0 is REQUIRED — without it this flex child refuses to shrink
+     below its content size and the overflow escapes the sidebar instead of
+     scrolling. Works identically in LTR and RTL (logical props, no fixed side).
+     Bottom padding keeps the last link off the scroll edge. */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 8px;
+  /* Subtle but usable scrollbar (Firefox). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+/* Subtle but usable scrollbar (WebKit/Blink) — kept visible & draggable. */
+.dash-nav-wrap::-webkit-scrollbar {
+  width: 8px;
+}
+.dash-nav-wrap::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 8px;
+}
+.dash-nav-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+.dash-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.dash-views-label {
+  letter-spacing: 0.08em;
+  padding-inline: 10px;
+  margin-bottom: 8px;
+}
+.dash-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dash-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  /* One nav row is a <button> (Related websites opens a card rather than
+     navigating), so the button defaults are reset here — otherwise that single
+     row would arrive with a border, a grey ground, centred text and a smaller
+     font than every link beside it. */
+  inline-size: 100%;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.dash-nav-item:hover {
+  background: var(--bg-cell);
+  text-decoration: none;
+}
+.dash-nav-item.is-active {
+  background: #eceae3;
+  font-weight: 600;
+}
+.dash-nav-item:focus-visible {
+  outline: 2px solid var(--albaker-gold);
+  outline-offset: 2px;
+}
+.dash-nav-icon {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+.dash-nav-item.is-active .dash-nav-icon {
+  color: var(--albaker-gold);
+}
+
+/* ---- Collapsible nav group (Tasks) ---- */
+.dash-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* The parent toggle looks like a nav item but is a <button>. */
+.dash-nav-toggle {
+  width: 100%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: start;
+}
+.dash-nav-toggle.is-active-parent {
+  font-weight: 600;
+}
+.dash-nav-caret {
+  display: inline-flex;
+  margin-inline-start: auto;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+/* Chevron points down when expanded; rotates toward the inline-start reveal
+   when collapsed (mirrored for RTL). */
+.dash-nav-toggle[aria-expanded='false'] .dash-nav-caret {
+  transform: rotate(-90deg);
+}
+[dir='rtl'] .dash-nav-toggle[aria-expanded='false'] .dash-nav-caret {
+  transform: rotate(90deg);
+}
+.dash-nav-sub {
+  margin-top: 2px;
+}
+/* Indent children so the tree reads as nested under the toggle. */
+.dash-nav-subitem {
+  padding-inline-start: 30px;
+  font-size: 13px;
+}
+
+/* ---- Sidebar footer ---- */
+.dash-sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dash-live {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 10px 8px;
+}
+.dash-live-dot {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--live-green);
+  flex: none;
+  animation: dash-pulse 1.6s ease-in-out infinite;
+}
+@keyframes dash-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+.dash-foot-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  inline-size: 100%;
+  text-align: start;
+}
+.dash-foot-btn:hover {
+  background: var(--bg-cell);
+}
+.dash-foot-btn:focus-visible {
+  outline: 2px solid var(--albaker-gold);
+  outline-offset: 2px;
+}
+
+/* ---- Company switcher ---- */
+.dash-switcher {
+  margin: 4px 0 14px;
+  padding: 0 4px;
+}
+.dash-switcher > label {
+  display: block;
+  padding-inline: 6px;
+  margin-bottom: 6px;
+}
+.dash-switcher-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.dash-switcher-icon {
+  position: absolute;
+  inset-inline-start: 10px;
+  display: inline-flex;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.dash-switcher-select {
+  inline-size: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px 9px 34px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: inherit;
+  cursor: pointer;
+}
+[dir='rtl'] .dash-switcher-select {
+  padding: 9px 34px 9px 12px;
+}
+.dash-switcher-select:focus {
+  outline: none;
+  border-color: var(--albaker-gold);
+  box-shadow: 0 0 0 3px rgba(189, 148, 70, 0.16);
+}
+
+/* ---- Sidebar identity ---- */
+.dash-identity {
+  padding: 4px 10px 8px;
+}
+.dash-identity-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dash-identity-role {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.dash-identity-admin {
+  color: var(--albaker-gold);
+}
+
+/* ---- Overview: companies list ---- */
+.dash-company-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+.dash-company-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.dash-company-row:last-child {
+  border-bottom: none;
+}
+.dash-company-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ---- Main pane ---- */
+.dash-main {
+  margin-inline-start: 240px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.dash-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--bg-app);
+  border-bottom: 1px solid var(--border);
+}
+.dash-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-card);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.dash-topbar-view {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.dash-content {
+  inline-size: 100%;
+  max-inline-size: 900px;
+  margin-inline: auto;
+  padding: 40px 32px 64px;
+}
+/* Pages whose content is a wide grid rather than prose opt out of the reading
+   width (DashboardShell's `wide` prop). Still capped, at a width a month grid
+   actually needs: past ~1700px the day columns stop gaining useful room and
+   the header line lengths get silly. */
+.dash-content.is-wide {
+  max-inline-size: 1700px;
+  padding-inline: 24px;
+}
+
+/* ---- Desktop collapsible sidebar (Notion-style) ---- */
+.dash-sidebar {
+  transition: transform 0.2s ease;
+}
+.dash-main {
+  transition: margin-inline-start 0.2s ease;
+}
+.dash.is-collapsed .dash-sidebar {
+  transform: translateX(-100%);
+}
+[dir='rtl'] .dash.is-collapsed .dash-sidebar {
+  transform: translateX(100%);
+}
+.dash.is-collapsed .dash-main {
+  margin-inline-start: 0;
+}
+/* Desktop-only re-open toggle in the topbar. Hidden while the sidebar is OPEN
+   (the in-sidebar .dash-collapse-side handles collapsing then); shown ONLY when
+   the sidebar is collapsed, so it can re-expand it. Scoped to desktop via the
+   min-width rule below so it never overrides the mobile hide (max-width: 860px),
+   where the .dash-menu-btn drawer toggle governs instead. */
+.dash-collapse-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-card);
+  cursor: pointer;
+  color: var(--text-primary);
+}
+@media (min-width: 861px) {
+  .dash.is-collapsed .dash-collapse-btn {
+    display: inline-flex;
+  }
+}
+.dash-collapse-btn:hover {
+  background: var(--bg-cell);
+}
+.dash-collapse-btn:focus-visible,
+.dash-collapse-side:focus-visible {
+  outline: 2px solid var(--albaker-gold);
+  outline-offset: 2px;
+}
+.dash-collapse-side {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 30px;
+  block-size: 30px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-card);
+  cursor: pointer;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.dash-collapse-side:hover {
+  background: var(--bg-cell);
+  color: var(--text-primary);
+}
+/* On mobile the hamburger drawer governs — hide the desktop collapse controls. */
+@media (max-width: 860px) {
+  .dash-collapse-btn,
+  .dash-collapse-side {
+    display: none;
+  }
+}
+
+/* ---- Titles / typography ---- */
+.dash-title {
+  font-size: var(--fs-hero);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+.dash-subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin: 0 0 24px;
+}
+.dash-page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.dash-back {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.dash-back:hover {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+/* ---- Cards / components ---- */
+.dash-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+.dash-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.dash-sq {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 3px;
+  flex: none;
+}
+.dash-sq-gold {
+  background: var(--albaker-gold);
+}
+.dash-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-cell);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.dash-chip {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.dash-chip-gold {
+  color: var(--albaker-gold);
+  background: rgba(189, 148, 70, 0.12);
+  border: 1px solid rgba(189, 148, 70, 0.28);
+}
+/* MISSING DATA. Gold reads as "worth noticing"; a file that cannot produce a
+   notice until somebody fills it in is not a nuance, so it takes the same
+   danger colour the blocking form errors already use. Same token as
+   .form-error and .dash-alert-error, so the whole portal says "wrong" in one
+   colour rather than three. */
+.dash-chip-danger {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid #f0c9c9;
+}
+.dash-meta {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.dash-value {
+  font-size: var(--fs-stat);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+.dash-actions {
+  margin-top: 22px;
+}
+.dash-btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--albaker-gold);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+.dash-btn-gold:hover {
+  background: #a97f37;
+  color: #fff;
+  text-decoration: none;
+}
+.dash-btn-gold:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* Green primary — used for "Approve & Task" so the three approval actions
+   (gold Approve, green Approve & Task, ghost Send back) are distinguishable. */
+.dash-btn-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #5e8c70;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+.dash-btn-green:hover {
+  background: #4f7a60;
+  color: #fff;
+  text-decoration: none;
+}
+.dash-btn-green:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.dash-btn-block {
+  inline-size: 100%;
+  margin-top: 6px;
+}
+
+/* ---- Users management ---- */
+.dash-grid-2 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-top: 24px;
+}
+@media (max-width: 900px) {
+  .dash-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+.dash-field {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.dash-field .dash-eyebrow {
+  margin-bottom: 6px;
+}
+.dash-input {
+  inline-size: 100%;
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: inherit;
+}
+.dash-input:focus {
+  outline: none;
+  border-color: var(--albaker-gold);
+  box-shadow: 0 0 0 3px rgba(189, 148, 70, 0.16);
+  background: var(--surface-card);
+}
+.dash-hint {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 6px;
+}
+.dash-alert {
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  border: 1px solid;
+}
+.dash-alert-error {
+  color: #8f3a3a;
+  background: #fbeeee;
+  border-color: #f0d2d2;
+}
+.dash-alert-ok {
+  color: var(--ok-green);
+  background: #eef5f0;
+  border-color: #cfe4d6;
+}
+.dash-strong {
+  font-weight: 600;
+}
+
+/* ---- Table ---- */
+.dash-table-wrap {
+  overflow-x: auto;
+}
+.dash-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.dash-table thead th {
+  text-align: start;
+  background: var(--bg-cell);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 10px 14px;
+}
+.dash-table thead th:first-child {
+  border-start-start-radius: 8px;
+}
+.dash-table thead th:last-child {
+  border-start-end-radius: 8px;
+}
+.dash-table tbody td {
+  padding: 0 14px;
+  block-size: 52px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.dash-td-muted {
+  color: var(--text-muted);
+}
+.dash-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  color: #fff;
+  text-transform: capitalize;
+}
+.dash-pill-gold {
+  background: var(--albaker-gold);
+}
+.dash-pill-green {
+  background: var(--finjan-green);
+}
+.dash-pill-indigo {
+  background: var(--both-purple);
+}
+
+/* ---- Mobile drawer ---- */
+.dash-scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.28);
+  border: none;
+  z-index: 25;
+}
+@media (max-width: 860px) {
+  .dash-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+  [dir='rtl'] .dash-sidebar {
+    transform: translateX(100%);
+  }
+  .dash.is-open .dash-sidebar {
+    transform: translateX(0);
+  }
+  .dash-main {
+    margin-inline-start: 0;
+  }
+  .dash-menu-btn {
+    display: inline-flex;
+  }
+  .dash.is-open .dash-scrim {
+    display: block;
+  }
+}
+
+/* ---- Loading skeleton / error + empty states ---- */
+.skel {
+  display: block;
+  background: var(--bg-cell);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.skel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  animation: skel-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes skel-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skel-logo {
+  inline-size: 150px;
+  block-size: 60px;
+}
+.skel-eyebrow {
+  inline-size: 60px;
+  block-size: 12px;
+  margin: 6px 10px 12px;
+}
+.skel-nav {
+  block-size: 34px;
+  margin-bottom: 6px;
+}
+.skel-topbar {
+  inline-size: 120px;
+  block-size: 14px;
+}
+.skel-title {
+  inline-size: 240px;
+  max-inline-size: 70%;
+  block-size: 38px;
+  margin-bottom: 14px;
+}
+.skel-sub {
+  inline-size: 320px;
+  max-inline-size: 85%;
+  block-size: 15px;
+  margin-bottom: 24px;
+}
+.skel-card {
+  block-size: 220px;
+}
+.dash-card-loading {
+  min-block-size: 260px;
+}
+.dash-main-full {
+  margin-inline-start: 0;
+}
+.dash-state-card {
+  max-inline-size: 520px;
+  margin-top: 12px;
+}
+.dash-title-sm {
+  font-size: var(--fs-display);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel::after,
+  .dash-live-dot {
+    animation: none;
+  }
+}
+
+/* ---- Small-screen tuning (mobile-first polish) ---- */
+@media (max-width: 640px) {
+  .dash-content {
+    padding: 24px 16px 48px;
+  }
+  /* Retune the display STEPS for a small screen rather than restating each
+     rule. Anything that adopts --fs-hero or --fs-stat later gets the mobile
+     size for free, instead of needing its own line added down here — which is
+     how a breakpoint block drifts out of step with the rules above it. */
+  :root {
+    --fs-hero: 28px;
+    --fs-stat: 22px;
+  }
+  .dash-meta {
+    gap: 22px;
+  }
+  .dash-page-head {
+    gap: 10px;
+  }
+  /* Comfortable tap targets (>= 44px) on touch screens. */
+  .dash-nav-item,
+  .dash-foot-btn {
+    padding: 11px 12px;
+  }
+  .dash-menu-btn {
+    inline-size: 40px;
+    block-size: 40px;
+  }
+  .auth-card {
+    padding: 26px 20px 24px;
+  }
+  .auth-logo img {
+    max-width: 200px;
+  }
+}
+
+/* ===========================================================================
+   Files (Phase 2) — section tabs, grid/list, detail modal
+   =========================================================================== */
+
+/* ---- Toolbar: section tabs + view toggle ---- */
+.files-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 8px 0 20px;
+}
+.files-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.files-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-card);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.files-tab:hover {
+  color: var(--text-primary);
+}
+.files-tab.is-active {
+  color: var(--text-primary);
+  border-color: var(--albaker-gold);
+  box-shadow: 0 0 0 3px rgba(189, 148, 70, 0.14);
+}
+.files-tab-dot {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 3px;
+  flex: none;
+}
+.files-tab-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-cell);
+  border-radius: 6px;
+  padding: 1px 7px;
+  min-inline-size: 20px;
+  text-align: center;
+}
+.files-tab.is-active .files-tab-count {
+  color: var(--text-primary);
+}
+
+.files-view-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface-card);
+}
+.files-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 38px;
+  block-size: 34px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.files-view-btn + .files-view-btn {
+  border-inline-start: 1px solid var(--border);
+}
+.files-view-btn.is-active {
+  background: var(--bg-cell);
+  color: var(--text-primary);
+}
+
+/* ---- Kanban board (Potential / Active / Expired columns) ----
+   The board is a horizontal flex row: in RTL the page sets dir='rtl', so the
+   columns naturally reverse and Potential reads on the RIGHT. Columns scroll
+   horizontally on narrow screens. Cards reuse the grid `.file-folder` styling
+   and are HTML5-draggable (managers/admins only). */
+.files-kanban-error {
+  margin: 0 0 12px;
+}
+.files-kanban-board {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  overflow-x: auto;
+  padding-block-end: 6px;
+}
+.files-kanban-col {
+  flex: 1 1 0;
+  min-inline-size: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-cell);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+.files-kanban-col.is-drop {
+  border-color: var(--albaker-gold);
+  box-shadow: 0 0 0 3px rgba(189, 148, 70, 0.16);
+  background: var(--surface-card);
+}
+.files-kanban-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+}
+.files-kanban-head-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1 1 auto;
+}
+.files-kanban-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-block-size: 48px;
+}
+.files-kanban-empty {
+  font-size: var(--fs-ui);
+  color: var(--text-faint);
+  text-align: center;
+  padding: 14px 8px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
+/* Compact list-style folder ROW (Kanban only). A short horizontal tile: small
+   colored folder glyph at the inline-start, a tight title + meta block, and an
+   optional Drive glyph at the inline-end. Roughly 60px tall so many folders fit
+   per column. The whole row is the HTML5 drag handle. */
+.file-folder-krow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-card);
+  cursor: pointer;
+  text-align: start;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.05s ease, opacity 0.15s ease;
+}
+.file-folder-krow:hover {
+  border-color: var(--albaker-gold);
+  box-shadow: 0 4px 12px rgba(20, 33, 45, 0.07);
+}
+.file-folder-krow:active {
+  transform: translateY(1px);
+}
+.file-folder-krow[draggable='true'] {
+  cursor: grab;
+}
+.file-folder-krow[draggable='true']:active {
+  cursor: grabbing;
+}
+.file-folder-krow.is-dragging {
+  opacity: 0.45;
+}
+.krow-icon {
+  position: relative;
+  line-height: 0;
+  flex: none;
+}
+/* The open-task count badge is smaller on the compact row's small folder icon. */
+.krow-icon .file-badge {
+  min-inline-size: 16px;
+  block-size: 16px;
+  padding: 0 4px;
+  font-size: var(--fs-chip);
+  inset-block-start: -5px;
+  inset-inline-end: -5px;
+}
+/* The client / vs / opponent title is the row's focus: it takes the remaining
+   width, is vertically centered by the row, left-aligned, and smaller than the
+   grid card (overriding the centered defaults from .folder-title). Long names
+   truncate with an ellipsis instead of breaking the layout. */
+.krow-title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+/* One-line "client vs opponent" title (Kanban card): a single row that
+   truncates with an ellipsis; the "vs"/"ضد" stays red inline. */
+.folder-title-oneline {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.folder-title-oneline .folder-title-vs {
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--danger);
+}
+/* Small red dot marking a critical (red) folder, pinned to the inline-end. */
+.krow-alert {
+  flex: none;
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  background: #c24a3c;
+}
+
+/* ---- Grid (Finder-style folders) ---- */
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+.file-folder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-card);
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+.file-folder:hover {
+  border-color: var(--albaker-gold);
+  box-shadow: 0 6px 18px rgba(20, 33, 45, 0.08);
+}
+.file-folder:active {
+  transform: translateY(1px);
+}
+.file-folder-icon {
+  position: relative;
+  line-height: 0;
+}
+.file-badge {
+  position: absolute;
+  inset-block-start: -4px;
+  inset-inline-end: -4px;
+  min-inline-size: 20px;
+  block-size: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--danger, #b23b3b);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.file-folder-title {
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+  word-break: break-word;
+}
+/* Folder CLIENT / vs / OPPONENT title — three centered stacked lines. Names
+   inherit the wrapping title class's size/weight/colour; only the "vs" connector
+   is restyled: red, smaller and lighter so the names stay the emphasis. Same
+   top-to-bottom order (client → vs → opponent) in LTR and RTL. */
+.folder-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  min-width: 0;
+}
+.folder-title-name {
+  word-break: break-word;
+}
+.folder-title-vs {
+  /* RELATIVE ON PURPOSE — the one place in the stylesheet where a step would be
+     wrong. This is the "ضد" between two party names, and it is subordinate to
+     whatever title it sits in: 13px on a folder card, 18px in the detail head.
+     A fixed size would be right in one of those and wrong in the other.
+
+     0.85, matching .folder-title-oneline .folder-title-vs, which had been set
+     to 0.85em while this one said 0.8em — the same element, two sizes. At 0.8
+     it also computed to 10.4px on a card, under the 11px floor the scale keeps
+     for Arabic. */
+  font-size: 0.85em;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--danger);
+}
+.file-folder-meta {
+  font-size: 11px;
+  color: var(--text-faint);
+}
+/* Google Drive icon pinned to the physical TOP-LEFT corner of the folder
+   DETAIL box (not the grid cards). Physical `left` on purpose — Yousef wants it
+   in the same visual corner in BOTH LTR and RTL, so it must NOT flip to the
+   inline-start. The detail box's header reserves padding-left for it. */
+.drive-link-corner {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 6px;
+  line-height: 0;
+  z-index: 2;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.drive-link-corner:hover {
+  background: var(--bg-cell);
+  transform: scale(1.08);
+}
+.drive-link-corner:focus-visible {
+  outline: 2px solid var(--albaker-gold);
+  outline-offset: 2px;
+}
+/* Red-file ALERT badge (grid folder + inline in list / detail). */
+.file-alert-badge,
+.file-alert-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-chip);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: #c24a3c;
+  border-radius: 999px;
+  padding: 2px 8px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.file-alert-badge {
+  box-shadow: 0 2px 6px rgba(194, 74, 60, 0.35);
+}
+
+/* ---- List ---- */
+.files-table tbody tr.files-row {
+  cursor: pointer;
+}
+.files-table tbody tr.files-row:hover td {
+  background: var(--bg-cell);
+}
+.files-row-client {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+.files-swatch {
+  inline-size: 12px;
+  block-size: 12px;
+  border-radius: 4px;
+  flex: none;
+}
+.files-chip {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* ---- Modal (create / detail) ---- */
+/* ABOVE THE DRAWERS (40/41).
+   .dash-modal has no z-index and no position of its own, so it stacks with this
+   scrim — its parent. At 40 it lost to .folder-drawer's 41, and the Edit-task
+   modal opened from the day drawer rendered BEHIND that drawer: half the form
+   was covered and its right-hand side could not be reached at all.
+
+   A modal is a focused, blocking interaction, usually opened FROM one of these
+   surfaces, so it belongs on top of every one of them. Kept below .pl-toast-wrap
+   (1000), which must stay visible over everything. */
+.dash-modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  background: rgba(20, 33, 45, 0.42);
+  overflow-y: auto;
+}
+.dash-modal {
+  inline-size: 100%;
+  max-inline-size: 520px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(20, 33, 45, 0.28);
+  padding: 20px 22px 22px;
+}
+.dash-modal-head {
+  position: relative; /* positioning context for the top-left Drive icon */
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.dash-modal-close {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  flex: none;
+}
+.dash-modal-close:hover {
+  color: var(--text-primary);
+}
+.dash-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+.dash-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.dash-btn-ghost:hover {
+  color: var(--text-primary);
+  border-color: var(--text-faint);
+}
+.dash-btn-ghost:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---- Detail panel internals ---- */
+.file-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.file-detail-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+.file-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  padding: 4px 0 4px;
+  border-block: 1px solid var(--border);
+  padding-block: 16px;
+}
+.file-detail-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 4px;
+  word-break: break-word;
+}
+.file-detail-block {
+  margin-top: 18px;
+}
+.file-colorbar {
+  display: flex;
+  gap: 4px;
+}
+.file-colorstep {
+  block-size: 14px;
+  flex: 1 1 0;
+  border-radius: 4px;
+  opacity: 0.4;
+}
+.file-colorstep.is-current {
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--surface-card), 0 0 0 3px rgba(0, 0, 0, 0.25);
+}
+.file-move-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* Danger zone — the admin-only folder-delete affordance, fenced off from the
+   normal controls with a red top border so it never reads as routine. */
+.file-danger-zone {
+  border-top: 1px solid rgba(154, 59, 47, 0.35);
+  padding-top: 14px;
+}
+.file-danger-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.file-danger-btn {
+  color: #9a3b2f;
+  border-color: #9a3b2f;
+}
+.file-danger-btn:hover {
+  background: rgba(154, 59, 47, 0.08);
+}
+.file-move-row .dash-input {
+  inline-size: auto;
+  min-inline-size: 160px;
+  flex: 1 1 160px;
+}
+.file-tasks-placeholder {
+  background: var(--bg-cell);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+@media (max-width: 560px) {
+  .file-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Access section (Phase 3) ---- */
+.access-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.access-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px 4px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.access-pill.is-pending {
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-muted);
+}
+.access-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 26px;
+  block-size: 26px;
+  border-radius: 999px;
+  background: var(--navy-dark);
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 700;
+  flex: none;
+}
+.access-avatar.is-muted {
+  background: var(--bg-cell);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.access-pill-name {
+  white-space: nowrap;
+}
+.access-pill-by {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+.access-pending-chip {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--warn-amber);
+  background: rgba(201, 137, 47, 0.12);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+.access-remove {
+  border: none;
+  background: transparent;
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-family: inherit;
+}
+.access-remove:hover {
+  text-decoration: underline;
+}
+.access-remove:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+.access-add-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.access-add-row .dash-input {
+  inline-size: auto;
+  min-inline-size: 180px;
+  flex: 1 1 180px;
+}
+
+/* ---- Access Requests view (Phase 3) ---- */
+.access-req-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.access-req-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.access-req-main {
+  flex: 1 1 260px;
+  min-inline-size: 0;
+}
+.access-req-file {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.access-req-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.access-req-meta .dash-eyebrow {
+  display: inline;
+}
+.access-req-metaitem {
+  white-space: nowrap;
+}
+.access-req-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--albaker-gold);
+  background: rgba(189, 148, 70, 0.12);
+  border: 1px solid rgba(189, 148, 70, 0.28);
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+.access-req-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: none;
+}
+
+/* ---- Tasks (Phase 4) ---- */
+.task-form {
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px 4px;
+  margin-bottom: 14px;
+}
+.task-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.task-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+/* TASK STATUS COLOUR.
+   Done work is no longer struck through or faded. A strikethrough reads as
+   "cancelled", and fading it implied the record mattered less — but a completed
+   task is the part of the history people go back to. It gets a calm green
+   ground instead; open work gets a very soft red so an unattended list is
+   visible at a glance without shouting. Both grounds are deliberately pale:
+   they sit behind ordinary body text, which still has to pass contrast. */
+.task-row.is-done,
+.task-card.is-done {
+  background: var(--task-done-bg);
+  border-color: var(--task-done-border);
+}
+.task-row.is-open,
+.task-card.is-open {
+  background: var(--task-open-bg);
+  border-color: var(--task-open-border);
+}
+.task-row-dot {
+  inline-size: 10px;
+  block-size: 10px;
+  border-radius: 999px;
+  margin-top: 5px;
+  flex: none;
+}
+.task-row-main {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+/* Compact "Edit" action on a task row (managers/admins, active tasks only). */
+.task-row-edit {
+  flex: none;
+  align-self: center;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface-card);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+.task-row-edit:hover {
+  color: var(--text-primary);
+  border-color: var(--text-faint);
+  background: var(--bg-cell);
+}
+.task-row-edit:focus-visible {
+  outline: 2px solid var(--albaker-gold);
+  outline-offset: 2px;
+}
+.task-row-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+.task-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-top: 6px;
+  font-size: var(--fs-ui);
+  color: var(--text-muted);
+}
+.task-row-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.task-row-status {
+  font-weight: 600;
+}
+.task-row-date {
+  color: var(--text-faint);
+}
+/* ---- Per-task "time until next color" countdown ---- */
+.task-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  /* Logical padding + a hairline chip so it reads as one unit; aligns to the
+     reading start in both LTR and RTL (dir="auto" on the element itself). */
+  padding-block: 2px;
+  padding-inline: 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.tc-dot {
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.tc-dot-next {
+  /* A subtle ring so the "next color" dot reads as a target, not a status. */
+  box-shadow: 0 0 0 1px var(--surface-card);
+}
+.tc-text {
+  font-variant-numeric: tabular-nums;
+}
+.tc-muted {
+  color: var(--text-muted);
+}
+.tc-sep {
+  color: var(--text-faint);
+}
+.tc-pause {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1;
+}
+.task-countdown.is-overdue {
+  border-color: rgba(194, 74, 60, 0.45);
+  background: rgba(194, 74, 60, 0.08);
+}
+.task-countdown.is-paused {
+  border-style: dashed;
+}
+.task-row-note {
+  margin-top: 6px;
+  font-size: var(--fs-ui);
+  color: var(--text-primary);
+  background: rgba(201, 137, 47, 0.1);
+  border: 1px solid rgba(201, 137, 47, 0.24);
+  border-radius: 7px;
+  padding: 6px 9px;
+  word-break: break-word;
+}
+.task-reassign-panel {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-cell);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+}
+
+/* Task cards (My Tasks) */
+.task-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.task-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.task-card-main {
+  flex: 1 1 260px;
+  min-inline-size: 0;
+}
+.task-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+.task-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.task-card-file {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.task-card-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Folders — the folder DRAWER
+   ---------------------------------------------------------------------------
+   Selecting a folder no longer splits the page. The active view (kanban / grid
+   / table) keeps its full width and is never reflowed; the folder's detail
+   opens OVER it, in a drawer pinned to the viewport edge, above a scrim that
+   dismisses it.
+
+   IT FOLLOWS THE TEXT DIRECTION — `inset-inline-end`, so the drawer opens on
+   the RIGHT in English and on the LEFT in Arabic. It lands on the side the
+   reader's eye ends on, which is the side a detail panel belongs on in each
+   script. The shadow is the one thing that cannot be expressed logically, so it
+   is flipped for RTL below.
+--------------------------------------------------------------------------- */
+/* A dimming VEIL, not a click-blocking scrim. `pointer-events: none` is the
+   whole point: with a folder open, a click on another folder card must reach
+   the CARD. When this layer took the click instead, the drawer just closed and
+   the card never opened — so switching between two folders took two clicks and
+   read as a broken card. Dismissal is handled by the drawer's own outside
+   pointer-down listener, which does not need a surface to land on. */
+.folder-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(20, 33, 45, 0.42);
+  pointer-events: none;
+}
+
+.folder-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  inset-inline-end: 0;
+  z-index: 41;
+  inline-size: min(560px, 100vw);
+  /* Its OWN scrollbar: the drawer is long (facts, tasks, comments) and must not
+     drag the page behind it. */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Flush to the viewport edge — no page padding, no floating rounded card. */
+  max-inline-size: none;
+  border-radius: 0;
+  border: 0;
+  border-inline-start: 1px solid var(--border);
+  margin: 0;
+  /* Cast INWARD, away from the edge it is pinned to. */
+  box-shadow: -12px 0 32px rgba(20, 33, 45, 0.22);
+  padding: 20px 22px 32px;
+}
+
+/* Arabic: the drawer sits on the left, so the shadow must fall to its right. */
+[dir='rtl'] .folder-drawer {
+  box-shadow: 12px 0 32px rgba(20, 33, 45, 0.22);
+}
+
+@media (max-width: 700px) {
+  .folder-drawer {
+    inline-size: 100vw;
+    padding: 16px 16px 28px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Folder drawer — the three tabs (Details / Tasks / Comments)
+--------------------------------------------------------------------------- */
+.fd-tabs {
+  display: flex;
+  gap: 4px;
+  border-block-end: 1px solid var(--border);
+  margin-block: 4px 16px;
+}
+
+.fd-tab {
+  appearance: none;
+  background: none;
+  border: 0;
+  border-block-end: 2px solid transparent;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: var(--fs-ui);
+  color: #6b655c;
+  cursor: pointer;
+}
+
+.fd-tab:hover {
+  color: #2b2823;
+}
+
+.fd-tab.is-active {
+  color: #2b2823;
+  border-block-end-color: var(--albaker-gold);
+  font-weight: 600;
+}
+
+/* The facts grid follows the READING direction, like every other block in the
+   drawer: `start` is the left in English and the right in Arabic.
+
+   It used to be `end`, which put these fields — folder type, client, opponent,
+   leader, created, section — hard against the opposite edge from the headings
+   and controls around them ("Folder info", "Access", "Colour status", "Move
+   file"), so the panel read as though half of it were mirrored. */
+.fd-facts {
+  justify-items: start;
+}
+
+.fd-facts > div {
+  min-inline-size: 0;
+  text-align: start;
+}
+
+/* Someone on booked leave: never assignable, and never silently so. */
+.fd-assignee-on-leave {
+  color: #c24a3c;
+}
+
+.fd-on-leave-note {
+  color: #c24a3c;
+  font-size: var(--fs-ui);
+}
+
+/* Who assigned a task — shown to managers and admins only (the server withholds
+   it from everyone else, so this never renders for an employee). */
+.task-row-assigner {
+  color: #7a7368;
+  font-size: 12px;
+}
+
+/* The push-back day-count box, opened under a task row. */
+.task-pushback-panel {
+  flex-basis: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(185, 154, 91, 0.06);
+}
+
+/* ---------------------------------------------------------------------------
+   Documents tab — the folder's Drive contents.
+--------------------------------------------------------------------------- */
+.fd-doc-openfolder {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fd-doc-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.fd-doc {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 4px;
+  border-block-end: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
+}
+
+.fd-doc:hover {
+  background: rgba(185, 154, 91, 0.08);
+}
+
+/* Fixed-width so the names line up into a readable column. */
+.fd-doc-kind {
+  flex: none;
+  inline-size: 52px;
+  font-size: 11px;
+  color: #7a7368;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fd-doc-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  font-size: var(--fs-ui);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fd-doc-date {
+  flex: none;
+  font-size: 12px;
+  color: #7a7368;
+}
+
+/* ---------------------------------------------------------------------------
+   TASK CALENDAR — a month grid in the shape people already know.
+   The grid is always six weeks tall so paging between months does not make the
+   page jump; short months simply carry more dimmed days.
+--------------------------------------------------------------------------- */
+.task-cal-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-end: 12px;
+  /* WRAPS. The bar carries ‹ label › Today AND the four range buttons; on a
+     phone those do not fit on one line, and without wrapping the range toggle
+     was pushed past the right edge and dragged the whole PAGE into horizontal
+     scrolling — 173px of it at 375px wide. */
+  flex-wrap: wrap;
+}
+.task-cal-month {
+  font-weight: 700;
+  font-size: 15px;
+  min-inline-size: 10ch;
+  text-align: center;
+}
+/* ---------------------------------------------------------------------------
+   THE WORKLOAD CALENDAR — a month of per-person LOAD, not a month of task
+   titles. Each day cell carries one row per person: an initial, a bar, and
+   "planned / capacity h". Titles are one click away (the cell opens the day),
+   because a month of six-point titles hides the only thing readable at this
+   zoom — that Wednesday is red and Thursday is empty.
+
+   The grid is always six weeks tall so paging between months does not make the
+   page jump; short months simply carry more dimmed days.
+--------------------------------------------------------------------------- */
+
+/* The pile and the month are one job, so they sit side by side. The pile is a
+   fixed column: it is a list of short cards, and letting it share the month's
+   growth would leave a column of whitespace beside three tasks. */
+.wl-layout {
+  display: grid;
+  /* The pile holds a title, a client chip, an hours chip and an Open button on
+     one line; at 260px those wrapped onto three. It gets a real column now, and
+     the month still takes every pixel left over. */
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+.wl-main {
+  min-inline-size: 0; /* let the month grid shrink inside the track */
+}
+
+.wl-pile {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  /* Its own scroll: a company with fifty unscheduled tasks must not push the
+     calendar off the bottom of the page. */
+  max-block-size: 78vh;
+  overflow-y: auto;
+}
+.wl-pile-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-block-end: 10px;
+}
+.wl-pile-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+.wl-pile-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.wl-pile-empty {
+  margin: 0;
+}
+.wl-pile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wl-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-card);
+  padding: 8px 9px;
+  cursor: grab;
+}
+.wl-card:active {
+  cursor: grabbing;
+}
+/* The card being dragged fades rather than vanishing: it is still where it was
+   until the drop lands, and removing it early would make a cancelled drag look
+   like a completed one. */
+.wl-card.is-dragging {
+  opacity: 0.45;
+}
+.wl-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wl-card-title {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.3;
+}
+.wl-card-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-block-start: 8px;
+}
+
+.wl-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-cell);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 11px;
+  padding: 2px 6px;
+  max-inline-size: 12ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wl-chip-hours,
+.wl-chip-open {
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.wl-chip-hours:disabled {
+  cursor: default;
+}
+/* A task nobody has sized adds NOTHING to a load bar, so the chip says so in
+   the muted voice of a prompt rather than showing a number that is not there. */
+.wl-chip-hours.is-unset {
+  color: var(--text-faint);
+  font-style: italic;
+}
+.wl-chip-open {
+  background: var(--surface-card);
+  border-color: var(--albaker-gold);
+  color: var(--albaker-gold);
+}
+.wl-hours-input {
+  inline-size: 7ch;
+  font: inherit;
+  font-size: 11px;
+  padding: 2px 4px;
+  border: 1px solid var(--albaker-gold);
+  border-radius: 6px;
+}
+
+.wl-cal-head,
+.wl-cal-grid {
+  display: grid;
+  /* Driven by the range: 7 columns for a week, fortnight or month; ONE for a
+     single day, which is what gives that range the width to print names. */
+  grid-template-columns: repeat(var(--wl-cols, 7), minmax(0, 1fr));
+  gap: 6px;
+}
+.wl-cal-head {
+  margin-block-end: 6px;
+}
+.wl-cal-weekday {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.wl-cal-cell {
+  min-block-size: 104px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+  background: var(--surface-card);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* NOT `overflow: hidden`. A company with a dozen people has more rows than a
+     fixed-height cell can show, and clipping them silently drew a day as
+     lighter than it is — the one thing this grid exists to get right. The cell
+     grows to fit its rows instead; every cell holds the same people, so the
+     whole month grows evenly and stays aligned. */
+  overflow: visible;
+}
+/* Days from the neighbouring month are dimmed rather than blank: an empty cell
+   where a date should be reads as a rendering fault. */
+.wl-cal-cell.is-outside {
+  opacity: 0.45;
+}
+.wl-cal-cell.is-today {
+  border-color: var(--albaker-gold, #bd9446);
+  box-shadow: inset 0 0 0 1px var(--albaker-gold, #bd9446);
+}
+.wl-cal-cell.is-open {
+  background: var(--bg-cell);
+}
+.wl-cal-daynum {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: start;
+  padding: 0;
+  cursor: pointer;
+}
+.wl-cal-daynum:hover {
+  color: var(--text-primary);
+}
+.wl-cal-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wl-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+.wl-row-who {
+  flex: none;
+  inline-size: 16px;
+  block-size: 16px;
+  border-radius: 50%;
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--fs-chip);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.wl-row-track {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  block-size: 6px;
+  border-radius: 999px;
+  background: var(--bg-cell);
+  overflow: hidden;
+}
+.wl-row-fill {
+  display: block;
+  block-size: 100%;
+  border-radius: 999px;
+  background: var(--ok-green, #4f8a63);
+}
+/* Over capacity is the one state that must survive a glance across a whole
+   month, so it changes HUE rather than shade. */
+.wl-row.is-over .wl-row-fill {
+  background: #b4443a;
+}
+.wl-row.is-over .wl-row-num {
+  color: #b4443a;
+  font-weight: 700;
+}
+/* A day outside this person's working days has no allowance at all — the row
+   is drawn faintly so the empty track reads as "not a working day" rather than
+   as "free". */
+.wl-row.is-offday {
+  opacity: 0.55;
+}
+.wl-row-num {
+  flex: none;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+/* Work planned onto the day but never estimated: the bar cannot show it, so
+   the row admits it exists rather than silently omitting it. */
+.wl-row-unsized {
+  color: var(--warn-amber, #c9892f);
+  font-weight: 700;
+  margin-inline-end: 2px;
+}
+
+/* The opened day, below the grid rather than in a modal: the month stays on
+   screen because the next move is usually onto another day. */
+.wl-day {
+  margin-block-start: 14px;
+  border-block-start: 1px solid var(--border);
+  padding-block-start: 12px;
+}
+.wl-day-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-block-end: 8px;
+}
+
+/* Deleting a task destroys its history, so its control never looks like the
+   neutral ones beside it. */
+.task-row-edit.is-danger {
+  color: #b4443a;
+  border-color: #e8c9c5;
+}
+
+@media (max-width: 1000px) {
+  /* The pile stops being a column and becomes a band above the month. Drag and
+     drop still works; below this width a 260px column leaves the month too
+     narrow to read seven days across. */
+  .wl-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wl-pile {
+    max-block-size: 40vh;
+  }
+}
+@media (max-width: 720px) {
+  .wl-cal-cell {
+    min-block-size: 74px;
+  }
+  /* THE GRID SCROLLS, THE PAGE DOES NOT.
+     Seven columns in 375px is ~50px each: the bar becomes a sliver and the
+     "2.5/4h" beside it has nowhere to go, so the screen stops saying the one
+     thing it exists to say. Columns keep a legible floor and the month scrolls
+     sideways within its own card instead — the same treatment every other wide
+     block on the platform gets, and it never drags the page with it.
+
+     The single-day range is exempt: it has one column, which always fits. */
+  .wl-cal:not(.is-day) {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .wl-cal:not(.is-day) .wl-cal-head,
+  .wl-cal:not(.is-day) .wl-cal-grid {
+    /* ~110px a column. At 620px the columns fitted the NUMBERS but left the
+       bar 18px of track, which is too little to read a proportion off — and
+       the bar is the part you are meant to read at a glance. Since the grid
+       scrolls, the floor costs nothing but a little more sideways travel. */
+    min-inline-size: 780px;
+  }
+  /* Which means the numbers fit again, so they stay. */
+}
+
+/* ---------------------------------------------------------------------------
+   FOLDERS — search + filters. Sits above the section tabs and narrows every
+   view (grid, list, kanban) plus the tab counts, so a tab can never advertise
+   a number the list below does not contain.
+--------------------------------------------------------------------------- */
+.files-filterbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-block-end: 12px;
+}
+.files-search {
+  flex: 1 1 260px;
+  /* .dash-input sets width:100%, which beats flex-basis and would put every
+     control on its own row — three stacked full-width boxes above the list.
+     Seen in testing; the basis above governs once the width is released. */
+  inline-size: auto;
+  min-inline-size: 180px;
+}
+.files-filter {
+  flex: 0 1 200px;
+  inline-size: auto;
+  min-inline-size: 150px;
+}
+@media (max-width: 620px) {
+  /* Stacked rather than squeezed: three controls side by side on a phone
+     leaves none of them usable. */
+  .files-search,
+  .files-filter {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   RELATED WEBSITES — the firm's other sites, as a card of direct links.
+   Replaces the single outbound "AlBaker AI" nav row, which could hold exactly
+   one destination and said nothing about it before you left.
+--------------------------------------------------------------------------- */
+.site-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.site-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--surface-card);
+}
+.site-link:hover {
+  border-color: var(--albaker-gold);
+  background: var(--bg-cell);
+}
+.site-link-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+.site-link-label {
+  font-weight: 700;
+  font-size: 14px;
+}
+.site-link-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.site-link-url {
+  font-size: 11px;
+  color: var(--text-faint);
+  /* Its own direction is set on the element (dir="ltr"); a long address
+     truncates rather than widening the card. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.site-link-go {
+  flex: none;
+  color: var(--albaker-gold);
+  font-size: 15px;
+}
+/* The arrow points AWAY from the reader in both scripts — mirrored for RTL so
+   it never reads as "back". */
+[dir='rtl'] .site-link-go {
+  transform: scaleX(-1);
+}
+
+/* ---------------------------------------------------------------------------
+   PINNED FOLDERS — sorted to the front of every list and visible to every
+   employee without an access grant. Being first is invisible on its own
+   ("first" and "newest" look identical), so the pin says why it is there.
+--------------------------------------------------------------------------- */
+.file-folder {
+  position: relative; /* positioning context for the pin */
+}
+.file-pin {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  display: inline-flex;
+  color: var(--albaker-gold);
+}
+.krow-pin,
+.files-row-pin {
+  display: inline-flex;
+  flex: none;
+  color: var(--albaker-gold);
+  margin-inline-end: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   THE DAY DRAWER — the work behind a day's load bars, on the inline-end edge.
+
+   Replaces a panel that sat below the grid. That panel pushed the calendar up
+   as it opened, moving the day you had just clicked out from under the pointer,
+   and on a six-week month it often opened below the fold — so clicking a day
+   looked like it had done nothing.
+
+   It reuses .folder-drawer wholesale (position, edge, shadow, RTL flip) so the
+   platform's two detail surfaces behave identically; only the head differs.
+--------------------------------------------------------------------------- */
+.day-drawer-title {
+  margin: 2px 0 0;
+  font-size: var(--fs-title);
+  font-weight: 700;
+}
+.day-drawer-hint {
+  margin: 0 0 12px;
+}
+/* A task lifted out of the day. Same treatment as a card lifted from the pile,
+   because it is the same gesture. */
+.day-drawer .task-row.is-dragging {
+  opacity: 0.45;
+}
+.day-drawer .task-row[draggable='true'] {
+  cursor: grab;
+}
+.day-drawer .task-row[draggable='true']:active {
+  cursor: grabbing;
+}
+
+/* The pile as a DROP TARGET — a task dragged back off the calendar. Dashed
+   rather than filled: it reads as "put it here", where a solid ground would
+   read as a selection that has already happened. */
+.wl-pile.is-drop {
+  border-color: var(--albaker-gold);
+  border-style: dashed;
+  background: var(--bg-cell);
+}
+
+/* ---------------------------------------------------------------------------
+   CALENDAR RANGE — fewer days on screen means each day gets more of it.
+
+   The cells are the same cells; only how many share the width and height
+   changes. A month is for "when is the pressure"; a single day is the only
+   range with room to name each person beside their bar.
+--------------------------------------------------------------------------- */
+.wl-range-toggle {
+  display: inline-flex;
+  margin-inline-start: auto; /* pushed to the far end of the toolbar */
+  flex: none;
+}
+.wl-range-toggle .files-view-btn {
+  font-size: 12px;
+  padding-inline: 10px;
+  inline-size: auto; /* these carry words, not a 16px glyph */
+}
+
+/* A fortnight halves the rows a month has, so each cell can afford twice the
+   height; a week has one row and can afford more still. */
+.wl-cal.is-biweek .wl-cal-cell {
+  min-block-size: 150px;
+}
+.wl-cal.is-week .wl-cal-cell {
+  min-block-size: 240px;
+}
+.wl-cal.is-biweek .wl-row,
+.wl-cal.is-week .wl-row {
+  font-size: 12px;
+}
+.wl-cal.is-biweek .wl-row-track,
+.wl-cal.is-week .wl-row-track {
+  block-size: 8px;
+}
+
+/* ONE DAY. The cell is the full width, so the bars become long enough to read
+   a proportion off, and every person is named rather than initialled. */
+.wl-cal.is-day .wl-cal-cell {
+  min-block-size: 0;
+  padding: 14px 16px;
+}
+.wl-cal.is-day .wl-cal-daynum {
+  font-size: 14px;
+  margin-block-end: 6px;
+}
+.wl-cal.is-day .wl-cal-rows {
+  gap: 8px;
+}
+.wl-cal.is-day .wl-row {
+  font-size: 13px;
+  gap: 10px;
+}
+.wl-cal.is-day .wl-row-track {
+  block-size: 12px;
+}
+.wl-cal.is-day .wl-row-num {
+  font-size: 13px;
+  min-inline-size: 8ch;
+  text-align: end;
+}
+/* The name column is fixed so every bar starts at the same x — a row of bars
+   with ragged left edges cannot be compared at a glance, which is the only
+   thing this view is for. */
+.wl-row-name {
+  flex: none;
+  inline-size: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  /* The name column would eat the bar at this width. */
+  .wl-row-name {
+    inline-size: 10ch;
+  }
+  .wl-cal.is-week .wl-cal-cell,
+  .wl-cal.is-biweek .wl-cal-cell {
+    min-block-size: 120px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PEOPLE FILTER — a multi-select over the roster.
+
+   Was a single <select>, which could say "everyone" or "one person" and
+   nothing between; the useful question is usually about a few people. Not a
+   native <select multiple>, which is an always-open list box needing
+   ctrl/cmd-click to add a second choice — a convention most people never
+   discover.
+--------------------------------------------------------------------------- */
+.people-filter {
+  position: relative;
+}
+.people-filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-inline-size: 190px;
+  cursor: pointer;
+  text-align: start;
+}
+.people-filter-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.people-filter-caret {
+  flex: none;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.people-filter-menu {
+  position: absolute;
+  inset-block-start: calc(100% + 4px);
+  inset-inline-start: 0;
+  z-index: 30;
+  min-inline-size: 260px;
+  max-block-size: 320px;
+  overflow-y: auto;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(20, 33, 45, 0.16);
+  padding: 8px;
+}
+.people-filter-actions {
+  display: flex;
+  gap: 6px;
+  padding-block-end: 6px;
+  margin-block-end: 6px;
+  border-block-end: 1px solid var(--border);
+}
+.people-filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.people-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.people-filter-row:hover {
+  background: var(--bg-cell);
+}
+.people-filter-name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.people-filter-cap {
+  flex: none;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The employee's folder drawer sub-header: which tasks these are, how many,
+   and the Drive link when the server sent one. */
+.emp-drawer-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-end: 10px;
+}
+.emp-drawer-drive {
+  margin-inline-start: auto;
+  display: inline-flex;
+  color: var(--text-muted);
+}
+.emp-drawer-drive:hover {
+  color: var(--albaker-gold);
+}
+
+/* The folder on a task card OPENS it. Styled as text that reveals itself as a
+   control on hover rather than as a button: it sits in a row of metadata, and
+   three buttons' worth of chrome there would drown the task title above it. */
+.task-card-file.is-openable {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: start;
+}
+.task-card-file.is-openable:hover {
+  color: var(--albaker-gold);
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  /* Below this the bar cannot hold the label, the arrows and four range
+     buttons on one line. Left to wrap on its own it broke mid-group — a lone
+     ‹ on the first line, the date on the second, › and Today on the third.
+     So each group is given a whole row instead: the date reads first, the
+     controls sit under it, and the range buttons share the last row. */
+  .task-cal-month {
+    order: -1;
+    flex: 1 1 100%;
+    text-align: start;
+  }
+  .wl-range-toggle {
+    margin-inline-start: 0;
+    inline-size: 100%;
+  }
+  .wl-range-toggle .files-view-btn {
+    flex: 1 1 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   PAYLATER — THE NOTES SCREEN
+   Uniform, fixed-size cards instead of a stack whose height followed whatever
+   the source document happened to say. One entry ran to five lines and the next
+   to twenty, so the list read as a wall and the short entries got lost.
+
+   Fixed height + internal scroll, per the house rule that content scrolls
+   inside its own container and never the page. The actions stay pinned to the
+   bottom of the card so "Confirm this" does not scroll out of reach.
+--------------------------------------------------------------------------- */
+.pl-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.pl-note-card {
+  display: flex;
+  flex-direction: column;
+  height: 260px;          /* the fixed size */
+  min-width: 0;           /* let it shrink inside the grid track */
+  overflow: hidden;       /* the scroll belongs to .pl-note-body, not the card */
+}
+
+.pl-note-head {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+
+.pl-note-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;          /* without this a flex child refuses to scroll */
+  padding-inline-end: 4px;
+}
+
+.pl-note-actions {
+  flex: 0 0 auto;
+  padding-top: 10px;
+}
+
+/* An open correction preview needs more room than a summary line, so that one
+   card is allowed to grow rather than trapping a table in 260px. */
+.pl-note-card.is-expanded {
+  height: auto;
+  min-height: 260px;
+}
+
+/* A KPI whose number is a problem rather than a fact. Same danger token as the
+   chips and the form errors, so one colour means one thing across the portal. */
+.dash-value.is-danger {
+  color: var(--danger);
+}
+
+/* ---------------------------------------------------------------------------
+   PAYLATER — THE BATCH FOLDERS ON THE DASHBOARD
+   These reuse .file-folder, but a batch card carries two chips ("Files: 100 /
+   100" and "Incomplete: 100") where a client folder carries none. In the
+   shared .files-grid the track is 155px and the chip row needs ~190px, so the
+   second chip rendered OUTSIDE its own card on every single one.
+
+   A grid of its own rather than widening .files-grid, which the main portal's
+   Folders board also uses — the fix belongs to the card that has the chips.
+--------------------------------------------------------------------------- */
+.pl-batch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+/* Wrap rather than overflow: two chips sit side by side when they fit and
+   stack when they do not, instead of spilling past the card's edge. */
+.pl-batch-grid .file-folder-krow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pl-batch-grid .dash-chip {
+  white-space: nowrap;
+}
+
+/* PayLater — the observations box.
+
+   MATCHES THE OTHER FIELDS. `.field input, .field select` carry the app's
+   border, padding, radius and focus ring; textarea was never in that rule, so
+   this box rendered as a bare browser textarea sitting among styled inputs.
+   Restated here rather than added to the shared rule, because that rule is used
+   by every textarea in the main portal too and this is not the place to
+   restyle those.
+
+   THREE ROWS, FIXED. Comfortably more than the two the field needs to be
+   usable, and fixed because the source text runs from one line to a paragraph:
+   a box that grew with it made the form jump between files, and a draggable one
+   could be pulled out of the two-column grid. Longer notes scroll inside. */
+.pl-observations {
+  width: 100%;
+  min-height: 92px; /* ≈ 3 rows at this font size, plus the padding */
+  height: 92px;
+  padding: 11px 12px;
+  /* The sibling inputs set no font-family, so they render in the browser's
+     default for form controls (Arial here) rather than the page stack. A
+     textarea's UA default is MONOSPACE, so leaving it unset would not match —
+     it has to be stated. Mirrors what the inputs actually render as; if the
+     app ever gives its inputs the page font, this should follow them. */
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: var(--fs-field);
+  line-height: 1.5;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  resize: none;
+  overflow-y: auto;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.pl-observations:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 146, 74, 0.18);
+}
+
+/* ---------------------------------------------------------------------------
+   PAYLATER — THE CUSTOMER FILE, laid out as the v2 prototype lays it out.
+
+   Eight sections, each headed by a small square and a title, with a pill for
+   the ones that carry a count. Every field carries a chip saying where its
+   value came from — auto, manual, edited, or "confirm me" — which is the
+   prototype's way of showing that a derived number is derived and a typed one
+   is typed. That distinction matters on a record that becomes a court filing.
+--------------------------------------------------------------------------- */
+.pl-sec { margin-bottom: 18px; }
+/* .pl-sechead, .pl-sechead h2 and .pl-pill were ALSO defined further down, in
+   the buttons section, with different padding, radius, background and size. The
+   later block won for everything it set, while this one still supplied
+   .pl-pill's font-weight — so the pill on screen was half from each and matched
+   neither. There is now one definition of each, below; only .pl-sq (a markup
+   variant of the heading square) survives here. */
+.pl-sq {
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 2px;
+  background: var(--albaker-gold);
+  flex: 0 0 auto;
+}
+/* Two columns on a wide screen, one when narrow. `span2` is for the long
+   name fields, which read badly at half width. */
+.pl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 13px;
+}
+.pl-f { min-width: 0; display: flex; flex-direction: column; }
+.pl-f.span2 { grid-column: span 2; }
+@media (max-width: 620px) { .pl-f.span2 { grid-column: auto; } }
+
+.pl-lab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+  font-size: var(--fs-ui);
+  font-weight: 600;
+  color: var(--navy-dark);
+}
+.pl-f input, .pl-f select {
+  width: 100%;
+  padding: 10px 11px;
+  /* --fs-field, not --fs-body: these are the same kind of control as the main
+     portal's `.field input`, and they were 14.5px against its 15px. Two form
+     fields half a pixel apart is not a decision anyone made. */
+  font-size: var(--fs-field);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+}
+.pl-f input:focus, .pl-f select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 146, 74, 0.18);
+}
+/* A derived value looks derived: tinted, and never typed into by accident. */
+.pl-f input.pl-auto { background: #faf8f3; color: var(--muted); }
+.pl-f input:disabled { background: #f4f2ec; color: var(--muted); }
+/* A field the flags panel is complaining about. */
+.pl-f input.pl-miss, .pl-f select.pl-miss { border-color: var(--danger); }
+
+.pl-chip {
+  font-size: var(--fs-chip);
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.pl-chip.au { color: var(--muted); background: #f1efe9; }
+.pl-chip.mn { color: #7a6a49; background: #f6f1e4; }
+.pl-chip.ed { color: var(--albaker-gold); background: rgba(189,148,70,.14); }
+.pl-chip.cf { color: var(--danger); background: var(--danger-bg); }
+
+.pl-hint { font-size: var(--fs-meta); color: var(--muted); margin-top: 4px; }
+
+/* The alerts panel. Red blocks the save, gold does not, green means clear. */
+.pl-flag {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 0;
+  font-size: var(--fs-ui);
+  border-bottom: 1px solid var(--border);
+}
+.pl-flag:last-child { border-bottom: 0; }
+.pl-flag .b {
+  inline-size: 7px; block-size: 7px; border-radius: 50%;
+  margin-top: 6px; flex: 0 0 auto;
+}
+.pl-flag.err { color: var(--danger); }
+.pl-flag.err .b { background: var(--danger); }
+.pl-flag.warn { color: #7a6a49; }
+.pl-flag.warn .b { background: var(--albaker-gold); }
+.pl-flag.ok { color: var(--ok-green, #3f7a53); }
+.pl-flag.ok .b { background: var(--ok-green, #3f7a53); }
+
+/* The locked case-journey section — visible, and visibly not available yet. */
+.pl-sec.locked { opacity: 0.62; }
+.pl-sec.locked .pl-sq { background: var(--muted); }
+
+/* The upload / manual toggle. */
+.pl-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.pl-seg button {
+  padding: 8px 14px; font-size: var(--fs-ui); font-weight: 600;
+  background: #fff; color: var(--muted); border: 0; cursor: pointer;
+}
+.pl-seg button.on {
+  /* v2: the chosen half lifts to white on the rail, it does not fill gold. */
+  background: var(--surface, #fff);
+  color: var(--text, #232220);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+}
+
+.pl-drop {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+/*
+  v2's "اختيار ملفات" control: a label styled as a button with the real file
+  input hidden inside it. The browser's own file input cannot be styled and
+  prints a different label in every browser, which is why the prototype wraps
+  it — and why the two-step choose-then-extract reads as two buttons.
+*/
+/*
+  ── PayLater buttons, taken from the v2 prototype ─────────────────────────
+  The prototype's primary is near-BLACK, not the platform's gold, and its
+  secondary is a plain white pill that turns gold only on hover. The quiet
+  "Edit" in a table row has no border at all. The portal was drawing all three
+  with the platform's own gold buttons, which is why the screens read as a
+  different product from the prototype they were specified from.
+
+  Scoped to .pl-* so the rest of the platform keeps its own buttons.
+  Values are v2's, kept literally: 13.5px / 10px 20px / radius 10.
+*/
+.pl-btn {
+  font-family: inherit;
+  font-size: var(--fs-ui);
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface, #fff);
+  color: var(--text, #232220);
+  text-decoration: none;
+  display: inline-block;
+}
+.pl-btn:hover { border-color: var(--albaker-gold); }
+.pl-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.pl-btn.p {
+  background: var(--text, #232220);
+  color: #fff;
+  border-color: var(--text, #232220);
+  font-weight: 600;
+}
+.pl-btn.p:hover { border-color: var(--text, #232220); opacity: .9; }
+.pl-btn.p:disabled { opacity: .45; cursor: not-allowed; }
+
+/* v2's .lnk — a bare word, red for destructive, muted for quiet actions. */
+.pl-lnk {
+  background: none;
+  border: 0;
+  font-family: inherit;
+  font-size: var(--fs-ui);
+  color: var(--danger);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.pl-lnk:hover { background: #FBF1EF; }
+.pl-lnk.q { color: var(--muted, #8A857D); }
+.pl-lnk.q:hover { background: var(--rail, #F6F5F1); }
+
+/* v2's .addbtn — the full-width dashed "+ add order". */
+.pl-addbtn {
+  width: 100%;
+  background: var(--surface, #fff);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  font-family: inherit;
+  font-size: var(--fs-ui);
+  color: var(--muted, #8A857D);
+  cursor: pointer;
+}
+.pl-addbtn:hover { border-color: var(--albaker-gold); color: var(--text, #232220); }
+
+/* v2's .tag — the status pill at the end of a table row. */
+.pl-tag {
+  font-size: var(--fs-chip);
+  border-radius: 20px;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  background: var(--rail, #F6F5F1);
+  color: var(--muted, #8A857D);
+  white-space: nowrap;
+}
+.pl-tag.miss { background: #FBF1EF; color: #A33528; border-color: #EFD2CD; }
+.pl-tag.done { background: #F1F5EF; color: #4F6B47; border-color: #DDE6D9; }
+.pl-tag.bi { background: #F7EDE3; color: #A2601F; border-color: #EEDCC8; }
+
+.pl-fakebtn {
+  display: inline-block;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: var(--fs-ui);
+  cursor: pointer;
+}
+.pl-fakebtn:hover { border-color: var(--albaker-gold); }
+.pl-fakebtn input { display: none; }
+
+/* The table's actions column. Sized down so a row of them stays a table. */
+.pl-rowedit {
+  padding: 4px 10px;
+  font-size: var(--fs-ui);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/*
+  ── v2's folder grid ──────────────────────────────────────────────────────
+  The prototype's home page is a wall of FOLDERS, not a list of cards: an icon
+  whose colour says at a glance whether the batch is empty, part-filled or
+  full, a red badge carrying the file count, and a red line naming how many
+  files still need data. Values are v2's own.
+*/
+.pl-folders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 13px;
+}
+.pl-folder {
+  background: var(--surface, #fff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 14px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(35, 34, 32, .03);
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.pl-folder:hover { border-color: var(--albaker-gold); transform: translateY(-1px); }
+.pl-folder svg { width: 46px; height: 38px; margin-bottom: 9px; }
+.pl-folder .code { font-weight: 600; font-size: var(--fs-field); }
+.pl-folder .meta { color: var(--muted, #8A857D); font-size: var(--fs-meta); margin-top: 2px; }
+.pl-folder .miss { color: var(--danger); }
+.pl-folder .badge {
+  position: absolute;
+  top: 9px;
+  inset-inline-start: 9px;
+  background: var(--danger);
+  color: #fff;
+  border-radius: 20px;
+  min-width: 21px;
+  height: 21px;
+  font-size: var(--fs-chip);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+/* v2's section heading: a small gold square, the title, then a count pill. */
+.pl-sechead { display: flex; align-items: center; gap: 9px; margin: 0 0 10px 2px; }
+.pl-sechead .sq { width: 9px; height: 9px; border-radius: 2px; background: var(--albaker-gold); }
+.pl-sechead h2 { font-size: var(--fs-head); font-weight: 600; margin: 0; }
+.pl-pill {
+  background: var(--border);
+  color: var(--muted, #8A857D);
+  border-radius: 20px;
+  padding: 1px 9px;
+  font-size: var(--fs-chip);
+  /* Carried over from the deleted duplicate above, which is where the pill was
+     getting its weight from. Without it the merge would have quietly thinned
+     every count pill in the portal. */
+  font-weight: 700;
+}
+
+/* v2's import row and the batch screen's action bar. */
+.pl-imp { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.pl-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+/* v2's order card: one purchase per card, so nine fields never need a
+   sideways scroller. `.pl-grid` already wraps to one column under 760px. */
+.pl-order {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 14px;
+  margin-bottom: 11px;
+  background: #FDFDFB;
+}
+.pl-ohead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+.pl-ohead .n { font-size: var(--fs-ui); color: var(--muted, #8A857D); }
+.pl-ohead .n b { color: var(--text, #232220); }
+
+/*
+  The centred toast. Fixed to the VIEWPORT so it does not scroll with the page,
+  and click-through so it cannot intercept a press meant for the form beneath.
+*/
+.pl-toast-wrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1000;
+}
+.pl-toast {
+  pointer-events: none;
+  max-inline-size: min(90vw, 420px);
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(35, 34, 32, .18);
+  border: 1px solid transparent;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.pl-toast.leaving { opacity: 0; transform: scale(.97); }
+/* v2's own flag colours: green for done, red for a problem. */
+.pl-toast.ok { background: #F1F5EF; color: #3F5A38; border-color: #DDE6D9; }
+.pl-toast.err { background: #FBF1EF; color: #A33528; border-color: #EFD2CD; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-toast { transition: opacity .01s; }
+}
+
+/* ---------------------------------------------------------------------------
+   Permissions tab — collapsible capability sections
+   The six capability groups (Folders, Tasks, Attendance, People, Company,
+   Notifications) each collapse to a single header row, and all six start
+   closed. The header keeps the .dash-eyebrow look of the old static label so
+   the tab reads the same, but is now a button.
+--------------------------------------------------------------------------- */
+.cap-section {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: var(--surface-card);
+}
+.cap-section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  inline-size: 100%;
+  padding: 9px 11px;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  /* The row is laid out with logical properties, so it mirrors under RTL
+     without any per-direction rule. */
+  text-align: start;
+  color: var(--text-primary);
+  font: inherit;
+}
+.cap-section-head:hover {
+  background: var(--bg-cell);
+}
+.cap-section-head:focus-visible {
+  outline: 2px solid var(--albaker-gold);
+  outline-offset: -2px;
+}
+.cap-section-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 14px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+.cap-section-chevron.is-open {
+  transform: rotate(90deg);
+}
+/* RTL: closed, the chevron must point INTO the page — leftwards. Open, it
+   points down in both directions, so the mirror is undone by the rotation. */
+[dir='rtl'] .cap-section-chevron {
+  transform: scaleX(-1);
+}
+[dir='rtl'] .cap-section-chevron.is-open {
+  transform: scaleX(-1) rotate(-90deg);
+}
+.cap-section-title {
+  flex: 1 1 auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+/* "3" — how many keys in this section are granted. Present only when non-zero,
+   so a collapsed section never hides that something is switched on inside it. */
+.cap-section-count {
+  flex: 0 0 auto;
+  min-inline-size: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--albaker-gold);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+.cap-section-body {
+  padding: 2px 11px 10px;
+}
+
+/* ---------------------------------------------------------------------------
+   Collections — the customer drawer
+   A customer file opens OVER its batch rather than replacing it, so the row
+   being worked on and the rows still to do stay in one view. Half the
+   viewport, per the request; the folder drawer's 560px would not hold a form
+   this wide.
+
+   Same rules as .folder-drawer: pinned to the edge the reader's eye ends on
+   (`inset-inline-end`, so right in English and left in Arabic), its own
+   scrollbar so the batch behind does not move, and the shadow cast inward —
+   the one thing that cannot be written logically, so it is flipped for RTL.
+--------------------------------------------------------------------------- */
+.collections-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(20, 33, 45, 0.42);
+  /* A veil, not a click-blocker: with a file open, clicking another row must
+     reach the ROW and open that file, rather than merely dismissing this one.
+     The drawer's own outside-pointer listener handles dismissal. */
+  pointer-events: none;
+}
+
+.collections-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  inset-inline-end: 0;
+  z-index: 41;
+  inline-size: min(50vw, 100vw);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  max-inline-size: none;
+  border-radius: 0;
+  border: 0;
+  border-inline-start: 1px solid var(--border);
+  margin: 0;
+  box-shadow: -12px 0 32px rgba(20, 33, 45, 0.22);
+  padding: 14px 22px 32px;
+}
+[dir='rtl'] .collections-drawer {
+  box-shadow: 12px 0 32px rgba(20, 33, 45, 0.22);
+}
+
+.collections-drawer-head {
+  display: flex;
+  justify-content: flex-end;
+  margin-block-end: 4px;
+}
+.collections-drawer-close {
+  padding: 4px 10px;
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* Half a phone is not a usable form, so below the tablet break it takes the
+   whole viewport — the same concession .folder-drawer makes. */
+@media (max-width: 900px) {
+  .collections-drawer {
+    inline-size: 100vw;
+    padding: 12px 16px 28px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Collections — put the portal's own controls on the platform's styles
+
+   The screens were built to match the v2 prototype, which had its own button
+   shape, field treatment and near-black primary. Side by side with the main
+   portal that read as two products: the same action was a black pill here and
+   a gold button there, and a form field changed radius and background when you
+   crossed between them.
+
+   These rules restyle the `pl-*` vocabulary in terms of the platform's, rather
+   than rewriting four thousand lines of markup to swap class names. The layout
+   classes (grids, sections, cards) keep doing their job; only the CONTROLS —
+   buttons, fields, chips, links — are brought onto the shared look, which is
+   what "same styling as the main portal" actually shows up as on screen.
+
+   Everything here mirrors an existing platform rule, so a change to
+   .dash-btn-gold / .dash-btn-ghost / .dash-input should be made there and
+   copied here, not diverged.
+--------------------------------------------------------------------------- */
+
+/* Secondary button = .dash-btn-ghost */
+.pl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.pl-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-faint);
+}
+.pl-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary button = .dash-btn-gold. The prototype's near-black primary is the
+   single loudest difference between the two portals. */
+.pl-btn.p {
+  background: var(--albaker-gold);
+  color: #fff;
+  border: 1px solid var(--albaker-gold);
+  font-weight: 600;
+}
+.pl-btn.p:hover {
+  background: #a97f37;
+  border-color: #a97f37;
+  color: #fff;
+  opacity: 1;
+}
+.pl-btn.p:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Form fields = .dash-input, including the focus ring. */
+.pl-f input,
+.pl-f select {
+  background: var(--bg-cell);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.pl-f input:focus,
+.pl-f select:focus {
+  border-color: var(--albaker-gold);
+  box-shadow: 0 0 0 3px rgba(189, 148, 70, 0.16);
+  background: var(--surface-card);
+}
+/* A derived value still looks derived, but in the platform's muted tones
+   rather than the prototype's cream. */
+.pl-f input.pl-auto,
+.pl-f input:disabled {
+  background: var(--bg-sidebar);
+  color: var(--text-muted);
+}
+
+/* Chips and status tags = .dash-chip metrics; the semantic colours stay,
+   because red/green/amber are carrying meaning, not decoration. */
+.pl-chip,
+.pl-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* The "add" affordance picks up the platform's gold on hover. */
+.pl-addbtn:hover {
+  border-color: var(--albaker-gold);
+  color: var(--albaker-gold);
+}
+
+/* A segmented control's selected face = the platform's gold, not near-black. */
+.pl-seg button.on {
+  background: var(--albaker-gold);
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   Calendar navigation arrows
+   `‹` and `›` are literal characters: they do not mirror the way a border or a
+   margin does. Under RTL the bar's flex row reverses, so the BACK button moves
+   to the reading-start side while its arrow went on pointing the other way —
+   the manager's calendar shipped with backwards arrows in the portal's default
+   language. Mirroring the glyph (not the button) keeps the DOM order, the tab
+   order and the handlers exactly as they are.
+--------------------------------------------------------------------------- */
+.cal-nav-arrow {
+  display: inline-block;
+  font-size: 16px;
+  line-height: 1;
+}
+[dir='rtl'] .cal-nav-arrow {
+  transform: scaleX(-1);
+}
+
+/* My Tasks stacks the pile ABOVE the calendar rather than beside it.
+   .wl-layout's 320px side column is sized for the full-width Employee Tasks
+   page; My Tasks renders inside the shell's ~900px reading column, where that
+   column would leave the month about 560px — seven days squeezed narrower than
+   the text inside them. This is the same shape the layout already falls back to
+   below 1000px, applied by container rather than by viewport. */
+.wl-layout.is-stacked {
+  grid-template-columns: minmax(0, 1fr);
+}
+.wl-layout.is-stacked .wl-pile {
+  max-block-size: 34vh;
+}

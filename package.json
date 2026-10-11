@@ -1,0 +1,47 @@
+{
+  "name": "albaker-portal",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "vercel-build": "bash scripts/vercel-build.sh",
+    "start": "next start -p ${PORT:-3000}",
+    "lint": "next lint",
+    "seed": "tsx scripts/seed.ts",
+    "seed:test": "tsx scripts/seed-test-accounts.ts",
+    "seed:test-tasks": "tsx scripts/seed-test-tasks.ts",
+    "db:snapshot": "tsx scripts/db-snapshot.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "import:paylater": "tsx scripts/import-paylater.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.9.6",
+    "jszip": "^3.10.1",
+    "next": "^14.2.35",
+    "pdfjs-dist": "^4.10.38",
+    "pg": "^8.22.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "server-only": "^0.0.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.0",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.9"
+  }
+}

@@ -1,0 +1,56 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# next.js
+/.next/
+/out/
+next-env.d.ts.bak
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# env files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# database dumps — these contain real client data (names, matters, contact
+# details, password hashes). Never commit one, even accidentally via `git add -A`.
+*.dump
+*.sql.gz
+*.backup
+
+# scratch files
+_CaseProbe.tmp
+
+# typescript
+*.tsbuildinfo
+
+# editor
+.vscode/
+.idea/
+
+# local tooling
+.claude/
+
+# PayLater prototypes and datasets — real client personal data (names, QIDs,
+# phone numbers, debts). Kept on disk for reference, never in git history,
+# where it could not be removed without rewriting every later commit.
+/PayLater Portal/
+
+# Audit output. Kept OUT of git deliberately: an audit report quotes the very
+# things it reports, so these files contain the committed credential and the
+# real client names and QIDs that the findings are about. Committing them would
+# write both back into history — the exact defect the audit found. They are
+# point-in-time artifacts, not source; share them out of band.
+/audits/

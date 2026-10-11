@@ -1,0 +1,20 @@
+# Never upload local env files. `railway up` sends the working directory, and
+# .env.local holds PRODUCTION credentials — if it reached a deployment, Next.js
+# would load it at runtime and the app would silently talk to the production
+# database. .gitignore already covers these; this is a deliberate second lock,
+# because being wrong here is a production data incident.
+.env
+.env.*
+!.env.example
+
+# Local-only tooling and build output (the builder runs its own install/build).
+node_modules
+.next
+.git
+.claude
+test
+*.dump
+*.sql.gz
+*.backup
+*.tsbuildinfo
+*.log
